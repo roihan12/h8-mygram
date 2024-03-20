@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/roihan12/h8-mygram/app/config"
 	"github.com/roihan12/h8-mygram/app/middleware"
+	photo "github.com/roihan12/h8-mygram/features/photo/handler"
 	user "github.com/roihan12/h8-mygram/features/user/handler"
 	sloggin "github.com/samber/slog-gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -25,6 +26,7 @@ type Router struct {
 func NewRouter(
 	app config.AppConfig,
 	userHandler user.UserController,
+	photoHandler photo.PhotoController,
 
 ) (*Router, error) {
 	// Disable debug mode in production
@@ -57,6 +59,19 @@ func NewRouter(
 			authUser.GET("", userHandler.Profile)
 			authUser.PUT("", userHandler.Update)
 			authUser.DELETE("", userHandler.Delete)
+
+		}
+	}
+
+	photo := v1.Group("/photos")
+	{
+		authphoto := photo.Group("/").Use(middleware.AuthMiddleware)
+		{
+			authphoto.POST("", photoHandler.Create)
+			authphoto.GET("", photoHandler.GetAll)
+			authphoto.GET("/:photoId", photoHandler.GetById)
+			authphoto.PUT("/:photoId", photoHandler.Update)
+			authphoto.DELETE("/:photoId", photoHandler.Delete)
 
 		}
 	}

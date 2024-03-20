@@ -3,10 +3,10 @@ package handler
 import "github.com/roihan12/h8-mygram/features/user"
 
 type UserReponse struct {
-	ID       uint   `json:"id"`
+	ID       uint   `json:"id,omitempty"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
-	Age      int64  `json:"age"`
+	Age      int64  `json:"age,omitempty"`
 }
 
 // authResponse represents an authentication response body

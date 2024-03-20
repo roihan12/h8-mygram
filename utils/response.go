@@ -55,8 +55,10 @@ var ErrorStatusMap = map[error]int{
 	ErrExpiredToken:               http.StatusUnauthorized,
 	ErrForbidden:                  http.StatusForbidden,
 	ErrNoUpdatedData:              http.StatusBadRequest,
-	ErrInsufficientStock:          http.StatusBadRequest,
-	ErrInsufficientPayment:        http.StatusBadRequest,
+	ErrFormatFile:                 http.StatusBadRequest,
+	ErrFileSize:                   http.StatusBadRequest,
+	ErrFileExtension:              http.StatusBadRequest,
+	ErrImageRequired:              http.StatusBadRequest,
 }
 
 // ValidationError sends an error response for some specific request validation error

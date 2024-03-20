@@ -12,14 +12,14 @@ type RegisterRequest struct {
 	Username string `json:"username" form:"username" binding:"required" example:"test12"`
 	Email    string `json:"email" form:"email" binding:"required,email" example:"test@example.com"`
 	Password string `json:"password" form:"password" binding:"required,min=6" example:"123456" minLength:"6"`
-	Age      int64  `json:"age" form:"age" binding:"required,gte=8" example:"123456" gte:"8"`
+	Age      int64  `json:"age" form:"age" binding:"required,gte=8" example:"20"`
 }
 
 type UpdateRequest struct {
-	Username string `json:"username" form:"username" binding:"required" example:"test12"`
-	Email    string `json:"email" form:"email" binding:"required,email" example:"test@example.com"`
-	Password string `json:"password" form:"password" binding:"required,min=6" example:"123456" minLength:"6"`
-	Age      int64  `json:"age" form:"age" binding:"required,gte=8" example:"123456" gte:"8"`
+	Username string `json:"username" form:"username" binding:"omitempty,required" example:"JohnDoe"`
+	Email    string `json:"email" form:"email" binding:"omitempty,required,email" example:"test@example.com"`
+	Password string `json:"password" form:"password" binding:"omitempty,required,min=6" example:"123456"`
+	Age      int64  `json:"age" form:"age" binding:"omitempty,required,gte=8" example:"21"`
 }
 
 func ReqToCore(data interface{}) *user.UserEntity {
