@@ -5,6 +5,9 @@ import (
 	"log/slog"
 	"os"
 
+	cData "github.com/roihan12/h8-mygram/features/comment/data"
+	cHandler "github.com/roihan12/h8-mygram/features/comment/handler"
+	cService "github.com/roihan12/h8-mygram/features/comment/service"
 	pData "github.com/roihan12/h8-mygram/features/photo/data"
 	pHandler "github.com/roihan12/h8-mygram/features/photo/handler"
 	pService "github.com/roihan12/h8-mygram/features/photo/service"
@@ -33,11 +36,16 @@ func main() {
 	photoService := pService.New(photoData, cloudinary)
 	photoHandler := pHandler.New(photoService)
 
+	commentData := cData.New(db)
+	commentService := cService.New(commentData)
+	commentHandler := cHandler.New(commentService)
+
 	// Init router
 	router, err := router.NewRouter(
 		*cfg,
 		*userHandler,
 		*photoHandler,
+		*commentHandler,
 	)
 	if err != nil {
 		slog.Error("Error initializing router", "error", err)

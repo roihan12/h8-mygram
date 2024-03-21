@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/roihan12/h8-mygram/app/config"
 	"github.com/roihan12/h8-mygram/app/middleware"
+	comment "github.com/roihan12/h8-mygram/features/comment/handler"
 	photo "github.com/roihan12/h8-mygram/features/photo/handler"
 	user "github.com/roihan12/h8-mygram/features/user/handler"
 	sloggin "github.com/samber/slog-gin"
@@ -27,6 +28,7 @@ func NewRouter(
 	app config.AppConfig,
 	userHandler user.UserController,
 	photoHandler photo.PhotoController,
+	commentHandler comment.CommentController,
 
 ) (*Router, error) {
 	// Disable debug mode in production
@@ -65,13 +67,26 @@ func NewRouter(
 
 	photo := v1.Group("/photos")
 	{
-		authphoto := photo.Group("/").Use(middleware.AuthMiddleware)
+		authPhoto := photo.Group("/").Use(middleware.AuthMiddleware)
 		{
-			authphoto.POST("", photoHandler.Create)
-			authphoto.GET("", photoHandler.GetAll)
-			authphoto.GET("/:photoId", photoHandler.GetById)
-			authphoto.PUT("/:photoId", photoHandler.Update)
-			authphoto.DELETE("/:photoId", photoHandler.Delete)
+			authPhoto.POST("", photoHandler.Create)
+			authPhoto.GET("", photoHandler.GetAll)
+			authPhoto.GET("/:photoId", photoHandler.GetById)
+			authPhoto.PUT("/:photoId", photoHandler.Update)
+			authPhoto.DELETE("/:photoId", photoHandler.Delete)
+
+		}
+	}
+	comment := v1.Group("/comments")
+	{
+		authComment := comment.Group("/").Use(middleware.AuthMiddleware)
+		{
+			authComment.POST("", commentHandler.Create)
+			authComment.GET("", commentHandler.MyAllComment)
+			authComment.GET("/:commentId", commentHandler.GetById)
+			authComment.GET("/photos/:photoId", commentHandler.GetCommentByPhotoID)
+			authComment.PUT("/:commentId", commentHandler.Update)
+			authComment.DELETE("/:commentId", commentHandler.Delete)
 
 		}
 	}

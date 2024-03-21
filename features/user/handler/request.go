@@ -12,7 +12,7 @@ type RegisterRequest struct {
 	Username string `json:"username" form:"username" binding:"required" example:"test12"`
 	Email    string `json:"email" form:"email" binding:"required,email" example:"test@example.com"`
 	Password string `json:"password" form:"password" binding:"required,min=6" example:"123456" minLength:"6"`
-	Age      int64  `json:"age" form:"age" binding:"required,gte=8" example:"20"`
+	Age      int64  `json:"age" form:"age" binding:"required,gt=8" example:"20"`
 }
 
 type UpdateRequest struct {

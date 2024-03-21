@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -98,13 +99,30 @@ func parseError(err error) []string {
 
 	if errors.As(err, &validator.ValidationErrors{}) {
 		for _, err := range err.(validator.ValidationErrors) {
-			errMsgs = append(errMsgs, err.Error())
+			errMsgs = append(errMsgs, ErrorRequestMessages(err.Field(), err.ActualTag(), err.Param()))
 		}
 	} else {
 		errMsgs = append(errMsgs, err.Error())
 	}
 
 	return errMsgs
+}
+
+func ErrorRequestMessages(field, tag, param string) (message string) {
+	switch tag {
+	case "required":
+		message = fmt.Sprintf("%s is required", field)
+	case "email":
+		message = fmt.Sprintf("%s must be valid email", field)
+	case "gt":
+		message = fmt.Sprintf("%s must be grather than %s", field, param)
+	case "min":
+		message = fmt.Sprintf("%s minimum %s characters", field, param)
+	default:
+		message = "Error validated request"
+	}
+
+	return
 }
 
 // ErrorResponse represents an error response body format

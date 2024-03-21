@@ -73,6 +73,11 @@ func (pc *PhotoController) Create(ctx *gin.Context) {
 		utils.HandleError(ctx, err)
 		return
 	}
+	err = utils.CheckFile(file)
+	if err != nil {
+		utils.HandleError(ctx, err)
+		return
+	}
 
 	photoImage = file
 

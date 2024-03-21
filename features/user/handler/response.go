@@ -4,8 +4,8 @@ import "github.com/roihan12/h8-mygram/features/user"
 
 type UserReponse struct {
 	ID       uint   `json:"id,omitempty"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
+	Username string `json:"username,omitempty"`
+	Email    string `json:"email,omitempty"`
 	Age      int64  `json:"age,omitempty"`
 }
 

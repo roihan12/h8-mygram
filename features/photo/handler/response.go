@@ -8,11 +8,11 @@ import (
 )
 
 type PhotoResponse struct {
-	ID        uint             `json:"id,omitempty"`
-	Title     string           `json:"title,omitempty"`
-	Caption   string           `json:"caption,omitempty"`
-	PhotoURL  string           `json:"photo_url,omitempty"`
-	UserID    uint             `json:"user_id,omitempty"`
+	ID        uint             `json:"id"`
+	Title     string           `json:"title"`
+	Caption   string           `json:"caption"`
+	PhotoURL  string           `json:"photo_url"`
+	UserID    uint             `json:"user_id"`
 	CreatedAt time.Time        `json:"created_at,omitempty"`
 	UpdatedAt time.Time        `json:"updated_at,omitempty"`
 	User      user.UserReponse `json:"user,omitempty"`
