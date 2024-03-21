@@ -54,12 +54,12 @@ func (uq *userQuery) Register(newUser user.UserEntity) (user.UserEntity, error) 
 	// Chek User
 	if err := uq.CheckEmail(newUser); err != nil {
 		log.Println("error create new user: ", err.Error())
-		return user.UserEntity{}, err
+		return user.UserEntity{}, utils.ErrConflictingData
 	}
 
 	if err := uq.CheckUsername(newUser); err != nil {
 		log.Println("error create new user: ", err.Error())
-		return user.UserEntity{}, err
+		return user.UserEntity{}, utils.ErrConflictingData
 	}
 
 	cnv := UserEntityToUser(newUser)

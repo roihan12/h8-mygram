@@ -12,6 +12,7 @@ import (
 	"github.com/roihan12/h8-mygram/app/middleware"
 	comment "github.com/roihan12/h8-mygram/features/comment/handler"
 	photo "github.com/roihan12/h8-mygram/features/photo/handler"
+	socialMedia "github.com/roihan12/h8-mygram/features/socialMedia/handler"
 	user "github.com/roihan12/h8-mygram/features/user/handler"
 	sloggin "github.com/samber/slog-gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -29,6 +30,7 @@ func NewRouter(
 	userHandler user.UserController,
 	photoHandler photo.PhotoController,
 	commentHandler comment.CommentController,
+	socialMediaHandler socialMedia.SocialMediaController,
 
 ) (*Router, error) {
 	// Disable debug mode in production
@@ -87,6 +89,19 @@ func NewRouter(
 			authComment.GET("/photos/:photoId", commentHandler.GetCommentByPhotoID)
 			authComment.PUT("/:commentId", commentHandler.Update)
 			authComment.DELETE("/:commentId", commentHandler.Delete)
+
+		}
+	}
+
+	socialMedia := v1.Group("/socialmedias")
+	{
+		authSocialMedia := socialMedia.Group("/").Use(middleware.AuthMiddleware)
+		{
+			authSocialMedia.POST("", socialMediaHandler.Create)
+			authSocialMedia.GET("", socialMediaHandler.GetAll)
+			authSocialMedia.GET("/:socialMediaId", socialMediaHandler.GetById)
+			authSocialMedia.PUT("/:socialMediaId", socialMediaHandler.Update)
+			authSocialMedia.DELETE("/:socialMediaId", socialMediaHandler.Delete)
 
 		}
 	}

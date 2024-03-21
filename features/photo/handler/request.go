@@ -9,7 +9,7 @@ import (
 type CreatePhotoRequest struct {
 	Title    string                `json:"title" form:"title" binding:"required" example:"My photo"`
 	Caption  string                `json:"caption" form:"caption"`
-	PhotoURL *multipart.FileHeader `json:"photo_url" form:"photo_url" binding:"required"`
+	// PhotoURL *multipart.File `json:"photo_url" form:"photo_url" binding:"required"`
 }
 
 type UpdatePhotoRequest struct {

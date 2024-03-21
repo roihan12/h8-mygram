@@ -16,6 +16,19 @@ func New(srv user.UserService) *UserController {
 	}
 }
 
+// Login godoc
+//
+//	@Summary		Login and get an access token
+//	@Description	Logs in a registered user and returns an access token if the credentials are valid.
+//	@Tags			Users
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		LoginRequest		true	"Login request body"
+//	@Success		200		{object}	authResponse		"Succesfully logged in"
+//	@Failure		400		{object}	utils.ErrorResponse	"Validation error"
+//	@Failure		401		{object}	utils.ErrorResponse	"Unauthorized error"
+//	@Failure		500		{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/users/login [post]
 func (uc *UserController) Login(ctx *gin.Context) {
 	var req LoginRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -34,6 +47,21 @@ func (uc *UserController) Login(ctx *gin.Context) {
 	utils.HandleSuccess(ctx, "Login user successfully", rsp)
 }
 
+// Register godoc
+//
+//	@Summary		Register a new user
+//	@Description	create a new user account
+//	@Tags			Users
+//	@Accept			json
+//	@Produce		json
+//	@Param			registerRequest	body		RegisterRequest		true	"Register request"
+//	@Success		200				{object}	UserReponse			"User created"
+//	@Failure		400				{object}	utils.ErrorResponse	"Validation error"
+//	@Failure		401				{object}	utils.ErrorResponse	"Unauthorized error"
+//	@Failure		404				{object}	utils.ErrorResponse	"Data not found error"
+//	@Failure		409				{object}	utils.ErrorResponse	"Data conflict error"
+//	@Failure		500				{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/users/register [post]
 func (uc *UserController) Register(ctx *gin.Context) {
 	req := RegisterRequest{}
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -52,6 +80,19 @@ func (uc *UserController) Register(ctx *gin.Context) {
 	utils.HandleSuccess(ctx, "Register user successfully", rsp)
 }
 
+// ProfileUser godoc
+//
+//	@Summary		Get a user
+//	@Description	Get a profile user
+//	@Tags			Users
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	UserReponse			"Profile User displayed"
+//	@Failure		400	{object}	utils.ErrorResponse	"Validation error"
+//	@Failure		404	{object}	utils.ErrorResponse	"Data not found error"
+//	@Failure		500	{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/users [get]
+//	@Security		BearerAuth
 func (uc *UserController) Profile(ctx *gin.Context) {
 	userID, userIDIsExist := ctx.Get("userID")
 	if !userIDIsExist {
@@ -71,6 +112,22 @@ func (uc *UserController) Profile(ctx *gin.Context) {
 
 }
 
+// UpdateUser godoc
+//
+//	@Summary		Update a user
+//	@Description	Update a user's username, email, password, age
+//	@Tags			Users
+//	@Accept			json
+//	@Produce		json
+//	@Param			updateUserRequest	body		UpdateRequest		true	"Update user request"
+//	@Success		200					{object}	UserReponse			"User updated"
+//	@Failure		400					{object}	utils.ErrorResponse	"Validation error"
+//	@Failure		401					{object}	utils.ErrorResponse	"Unauthorized error"
+//	@Failure		403					{object}	utils.ErrorResponse	"Forbidden error"
+//	@Failure		404					{object}	utils.ErrorResponse	"Data not found error"
+//	@Failure		500					{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/users [put]
+//	@Security		BearerAuth
 func (uc *UserController) Update(ctx *gin.Context) {
 	userID, userIDIsExist := ctx.Get("userID")
 	if !userIDIsExist {
@@ -95,6 +152,21 @@ func (uc *UserController) Update(ctx *gin.Context) {
 	utils.HandleSuccess(ctx, "Update user successfully", rsp)
 }
 
+// DeleteUser godoc
+//
+//	@Summary		Delete a user
+//	@Description	Delete a user
+//	@Tags			Users
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	utils.Response		"User deleted"
+//	@Failure		400	{object}	utils.ErrorResponse	"Validation error"
+//	@Failure		401	{object}	utils.ErrorResponse	"Unauthorized error"
+//	@Failure		403	{object}	utils.ErrorResponse	"Forbidden error"
+//	@Failure		404	{object}	utils.ErrorResponse	"Data not found error"
+//	@Failure		500	{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/users [delete]
+//	@Security		BearerAuth
 func (uc *UserController) Delete(ctx *gin.Context) {
 	userID, userIDIsExist := ctx.Get("userID")
 	if !userIDIsExist {

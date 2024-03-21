@@ -1,0 +1,970 @@
+basePath: /v1
+definitions:
+  handler.CommentRequest:
+    properties:
+      message:
+        example: My Commment Message
+        type: string
+      photo_id:
+        example: 1
+        type: integer
+    required:
+    - message
+    - photo_id
+    type: object
+  handler.CommentResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      photo:
+        $ref: '#/definitions/handler.PhotoResponse'
+      photo_id:
+        type: integer
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/handler.UserReponse'
+      user_id:
+        type: integer
+    type: object
+  handler.CommentUpdate:
+    properties:
+      message:
+        example: My Commment Message
+        type: string
+    required:
+    - message
+    type: object
+  handler.CreateSocialMediaRequest:
+    properties:
+      name:
+        example: My social
+        type: string
+      social_media_url:
+        type: string
+    required:
+    - name
+    - social_media_url
+    type: object
+  handler.LoginRequest:
+    properties:
+      email:
+        example: test@example.com
+        type: string
+      password:
+        example: "123456"
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  handler.PhotoResponse:
+    properties:
+      caption:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/handler.UserReponse'
+      user_id:
+        type: integer
+    type: object
+  handler.RegisterRequest:
+    properties:
+      age:
+        example: 20
+        type: integer
+      email:
+        example: test@example.com
+        type: string
+      password:
+        example: "123456"
+        minLength: 6
+        type: string
+      username:
+        example: test12
+        type: string
+    required:
+    - age
+    - email
+    - password
+    - username
+    type: object
+  handler.SocialMediaResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      social_media_url:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/handler.UserReponse'
+      user_id:
+        type: integer
+    type: object
+  handler.UpdateRequest:
+    properties:
+      age:
+        example: 21
+        minimum: 8
+        type: integer
+      email:
+        example: test@example.com
+        type: string
+      password:
+        example: "123456"
+        minLength: 6
+        type: string
+      username:
+        example: JohnDoe
+        type: string
+    required:
+    - age
+    - email
+    - password
+    - username
+    type: object
+  handler.UserReponse:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  handler.authResponse:
+    properties:
+      token:
+        example: eGdh5kiOTyyaQ3_bNykYDeYHO21Jg2...
+        type: string
+    type: object
+  utils.ErrorResponse:
+    properties:
+      messages:
+        example:
+        - Error message 1
+        - ' Error message 2'
+        items:
+          type: string
+        type: array
+      success:
+        example: false
+        type: boolean
+    type: object
+  utils.Response:
+    properties:
+      data: {}
+      message:
+        example: Success
+        type: string
+      success:
+        example: true
+        type: boolean
+    type: object
+info:
+  contact:
+    email: roihansori12@gmail.com
+    name: Roihan Sori
+  description: This is a simple RESTful Social Media Service API written in Go using
+    Gin web framework, PostgreSQL database
+  license:
+    name: MIT
+  title: MY GRAM API
+  version: "1.0"
+paths:
+  /comments:
+    get:
+      consumes:
+      - application/json
+      description: List my comments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Comment retrieved
+          schema:
+            items:
+              $ref: '#/definitions/handler.CommentResponse'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List my comments
+      tags:
+      - Comments
+    post:
+      consumes:
+      - application/json
+      description: create a new comment  with message and photo_id
+      parameters:
+      - description: Create comment request
+        in: body
+        name: CommentRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CommentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Comment created
+          schema:
+            $ref: '#/definitions/handler.CommentResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new comment
+      tags:
+      - Comments
+  /comments/{commentId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a comment by id
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Comment deleted
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a comment
+      tags:
+      - Comments
+    get:
+      consumes:
+      - application/json
+      description: get a comment by id
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Comment retrieved
+          schema:
+            $ref: '#/definitions/handler.CommentResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a comment
+      tags:
+      - Comments
+    put:
+      consumes:
+      - application/json
+      description: update a comment  with message
+      parameters:
+      - description: Comment ID
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      - description: Update comment request
+        in: body
+        name: CommentRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CommentUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Comment Update Success
+          schema:
+            $ref: '#/definitions/handler.CommentResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a comment
+      tags:
+      - Comments
+  /photos:
+    get:
+      consumes:
+      - application/json
+      description: List photos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Photos retrieved
+          schema:
+            items:
+              $ref: '#/definitions/handler.PhotoResponse'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List photos
+      tags:
+      - Photos
+    post:
+      consumes:
+      - multipart/form-data
+      description: create a new photo with title, caption and photo url
+      operationId: file.upload
+      parameters:
+      - description: this is image file
+        in: formData
+        name: photo_url
+        required: true
+        type: file
+      - in: formData
+        name: caption
+        type: string
+      - example: My photo
+        in: formData
+        name: title
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Photo retrieved
+          schema:
+            $ref: '#/definitions/handler.PhotoResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new photo Upload file
+      tags:
+      - Photos
+  /photos/{photoId}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a photo by id
+      parameters:
+      - description: Photo ID
+        in: path
+        name: photoId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Photo deleted
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a photo
+      tags:
+      - Photos
+    get:
+      consumes:
+      - application/json
+      description: get a photo by id
+      parameters:
+      - description: Photo ID
+        in: path
+        name: photoId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Photo retrieved
+          schema:
+            $ref: '#/definitions/handler.PhotoResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a photo
+      tags:
+      - Photos
+    put:
+      consumes:
+      - multipart/form-data
+      description: update a photo with title, caption and photo url
+      operationId: file.update
+      parameters:
+      - description: Photo ID
+        in: path
+        name: photoId
+        required: true
+        type: integer
+      - description: this is image file
+        in: formData
+        name: photo_url
+        type: file
+      - in: formData
+        name: caption
+        type: string
+      - example: My photo
+        in: formData
+        name: title
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Photo retrieved
+          schema:
+            $ref: '#/definitions/handler.PhotoResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Updated a  photo Upload file
+      tags:
+      - Photos
+  /socialmedias:
+    get:
+      consumes:
+      - application/json
+      description: List social media
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Social media retrieved
+          schema:
+            items:
+              $ref: '#/definitions/handler.SocialMediaResponse'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List social media
+      tags:
+      - SocialMedia
+    post:
+      consumes:
+      - application/json
+      description: create a new social media  with name and social media url
+      parameters:
+      - description: Create social media request
+        in: body
+        name: CreateSocialMediaRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateSocialMediaRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Social media created
+          schema:
+            $ref: '#/definitions/handler.SocialMediaResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new social media
+      tags:
+      - SocialMedia
+  /socialmedias/{socialMediaId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a social media by id
+      parameters:
+      - description: Social Media ID
+        in: path
+        name: socialMediaId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Social media deleted
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a social media
+      tags:
+      - SocialMedia
+    get:
+      consumes:
+      - application/json
+      description: get a social media by id
+      parameters:
+      - description: Social Media ID
+        in: path
+        name: socialMediaId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Social media retrieved
+          schema:
+            $ref: '#/definitions/handler.SocialMediaResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a social media
+      tags:
+      - SocialMedia
+    put:
+      consumes:
+      - application/json
+      description: update a social media  with name and social media url
+      parameters:
+      - description: Social Media ID
+        in: path
+        name: socialMediaId
+        required: true
+        type: integer
+      - description: Update social media request
+        in: body
+        name: CreateSocialMediaRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateSocialMediaRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Social media created
+          schema:
+            $ref: '#/definitions/handler.SocialMediaResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a social media
+      tags:
+      - SocialMedia
+  /users:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete a user
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: Get a profile user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Profile User displayed
+          schema:
+            $ref: '#/definitions/handler.UserReponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get a user
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Update a user's username, email, password, age
+      parameters:
+      - description: Update user request
+        in: body
+        name: updateUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated
+          schema:
+            $ref: '#/definitions/handler.UserReponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "403":
+          description: Forbidden error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a user
+      tags:
+      - Users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a registered user and returns an access token if the credentials
+        are valid.
+      parameters:
+      - description: Login request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Succesfully logged in
+          schema:
+            $ref: '#/definitions/handler.authResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Login and get an access token
+      tags:
+      - Users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: create a new user account
+      parameters:
+      - description: Register request
+        in: body
+        name: registerRequest
+        required: true
+        schema:
+          $ref: '#/definitions/handler.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User created
+          schema:
+            $ref: '#/definitions/handler.UserReponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "401":
+          description: Unauthorized error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "404":
+          description: Data not found error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "409":
+          description: Data conflict error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/utils.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - Users
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and the access token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

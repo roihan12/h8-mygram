@@ -20,6 +20,17 @@ func New(srv photo.PhotoService) *PhotoController {
 	}
 }
 
+// ListPhotos godoc
+//
+//	@Summary		List photos
+//	@Description	List photos
+//	@Tags			Photos
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{array}		PhotoResponse		"Photos retrieved"
+//	@Failure		500	{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/photos [get]
+//	@Security		BearerAuth
 func (pc *PhotoController) GetAll(ctx *gin.Context) {
 
 	photos, err := pc.photoService.GetAll()
@@ -33,6 +44,20 @@ func (pc *PhotoController) GetAll(ctx *gin.Context) {
 	utils.HandleSuccess(ctx, "Get all photo successfully", listPhotoResponse)
 }
 
+// GetPhoto godoc
+//
+//	@Summary		Get a photo
+//	@Description	get a photo by id
+//	@Tags			Photos
+//	@Accept			json
+//	@Produce		json
+//	@Param			photoId	path		uint				true	"Photo ID"
+//	@Success		200		{object}	PhotoResponse		"Photo retrieved"
+//	@Failure		400		{object}	utils.ErrorResponse	"Validation error"
+//	@Failure		404		{object}	utils.ErrorResponse	"Data not found error"
+//	@Failure		500		{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/photos/{photoId} [get]
+//	@Security		BearerAuth
 func (pc *PhotoController) GetById(ctx *gin.Context) {
 	Id := ctx.Param("photoId")
 	photoId, _ := strconv.Atoi(Id)
@@ -45,6 +70,22 @@ func (pc *PhotoController) GetById(ctx *gin.Context) {
 	utils.HandleSuccess(ctx, "Get by id photo successfully", response)
 }
 
+// CreatePhoto
+//
+//	@Summary		Create a new photo Upload file
+//	@Description	create a new photo with title, caption and photo url
+//	@Tags			Photos
+//	@ID				file.upload
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			photo_url			formData	file				true	"this is image file"
+//	@Param			CreatePhotoRequest	formData	CreatePhotoRequest	true	"Create photo request"
+//	@Success		200					{object}	PhotoResponse		"Photo retrieved"
+//	@Failure		400					{object}	utils.ErrorResponse	"Validation error"
+//	@Failure		404					{object}	utils.ErrorResponse	"Data not found error"
+//	@Failure		500					{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/photos [post]
+//	@Security		BearerAuth
 func (pc *PhotoController) Create(ctx *gin.Context) {
 	var req CreatePhotoRequest
 	var photoImage *multipart.FileHeader
@@ -88,7 +129,23 @@ func (pc *PhotoController) Create(ctx *gin.Context) {
 	}
 	utils.HandleSuccess(ctx, "Create photo successfully", PhotoEntityToPhotoResponse(response))
 }
-
+// UpdatePhoto
+//
+//	@Summary		Updated a  photo Upload file
+//	@Description	update a photo with title, caption and photo url
+//	@Tags			Photos
+//	@ID				file.update
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			photoId				path		uint				true	"Photo ID"
+//	@Param			photo_url			formData	file				false	"this is image file"
+//	@Param			CreatePhotoRequest	formData	CreatePhotoRequest	true	"Update photo request"
+//	@Success		200					{object}	PhotoResponse		"Photo retrieved"
+//	@Failure		400					{object}	utils.ErrorResponse	"Validation error"
+//	@Failure		404					{object}	utils.ErrorResponse	"Data not found error"
+//	@Failure		500					{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/photos/{photoId} [put]
+//	@Security		BearerAuth
 func (pc *PhotoController) Update(ctx *gin.Context) {
 
 	Id := ctx.Param("photoId")
@@ -135,6 +192,20 @@ func (pc *PhotoController) Update(ctx *gin.Context) {
 	utils.HandleSuccess(ctx, "Update photo successfully", PhotoEntityToPhotoResponse(response))
 }
 
+// DeletePhoto godoc
+//
+//	@Summary		Delete a photo
+//	@Description	delete a photo by id
+//	@Tags			Photos
+//	@Accept			json
+//	@Produce		json
+//	@Param			photoId	path		uint				true	"Photo ID"
+//	@Success		200		{object}	utils.Response		"Photo deleted"
+//	@Failure		400		{object}	utils.ErrorResponse	"Validation error"
+//	@Failure		404		{object}	utils.ErrorResponse	"Data not found error"
+//	@Failure		500		{object}	utils.ErrorResponse	"Internal server error"
+//	@Router			/photos/{photoId} [delete]
+//	@Security		BearerAuth
 func (pc *PhotoController) Delete(ctx *gin.Context) {
 	Id := ctx.Param("photoId")
 	photoId, _ := strconv.Atoi(Id)
