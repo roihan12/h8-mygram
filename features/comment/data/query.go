@@ -2,7 +2,6 @@ package data
 
 import (
 	"errors"
-	"fmt"
 	"log"
 
 	"github.com/roihan12/h8-mygram/features/comment"
