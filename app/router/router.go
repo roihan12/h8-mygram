@@ -1,7 +1,7 @@
 package router
 
 import (
-	"fmt"
+	// "fmt"
 	"log/slog"
 
 	// "strings"
@@ -40,9 +40,9 @@ func NewRouter(
 
 	// CORS
 	ginConfig := cors.DefaultConfig()
-	allowedOrigins := app.AllowedOrigins
+	// allowedOrigins := app.AllowedOrigins
 	// originsList := strings.Split(allowedOrigins, ",")
-	ginConfig.AllowOrigins = []string{"http://127.0.0.1:5173"}
+	ginConfig.AllowAllOrigins = true
 
 	router := gin.New()
 	router.Use(sloggin.New(slog.Default()), gin.Recovery(), cors.New(ginConfig))

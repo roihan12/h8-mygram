@@ -24,7 +24,6 @@ type claudinaryUploader struct {
 }
 
 func NewCloudinary(cfg *config.AppConfig) Uploader {
-	fmt.Println(cfg.CLOUDINARY_CLOUD_NAME, cfg.CLOUDINARY_API_KEY, cfg.CLOUDINARY_API_SECRET)
 	cld, err := cloudinary.NewFromParams(cfg.CLOUDINARY_CLOUD_NAME, cfg.CLOUDINARY_API_KEY, cfg.CLOUDINARY_API_SECRET)
 	if err != nil {
 		log.Println("init cloudinary gagal", err)
