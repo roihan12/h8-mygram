@@ -41,7 +41,6 @@ func NewRouter(
 	// CORS
 	ginConfig := cors.DefaultConfig()
 	allowedOrigins := app.AllowedOrigins
-	fmt.Println(allowedOrigins)
 	// originsList := strings.Split(allowedOrigins, ",")
 	ginConfig.AllowOrigins = []string{"http://127.0.0.1:5173"}
 

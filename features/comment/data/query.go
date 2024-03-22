@@ -39,8 +39,7 @@ func (qf *query) GetById(id uint) (comment.CommentEntity, error) {
 		}
 		return comment.CommentEntity{}, err
 	}
-	fmt.Println(getComment.User)
-	fmt.Println(getComment.Photo)
+	
 	return CommentToCommentEntity(getComment), nil
 }
 
