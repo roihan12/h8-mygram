@@ -2,16 +2,9 @@ package config
 
 import (
 	"log"
-
-	"github.com/spf13/viper"
-)
-
-var (
-	JWT_KEY                  string
-	CLOUDINARY_CLOUD_NAME    string
-	CLOUDINARY_API_KEY       string
-	CLOUDINARY_API_SECRET    string
-	CLOUDINARY_UPLOAD_FOLDER string
+	"os"
+	"strconv"
+	"github.com/joho/godotenv"
 )
 
 type AppConfig struct {
@@ -31,37 +24,41 @@ type AppConfig struct {
 	AllowedOrigins           string
 }
 
-func InitConfig() *AppConfig {
-	return ReadEnv()
-}
 
-func ReadEnv() *AppConfig {
+// New creates a new container instance
+func NewEnv() (*AppConfig, error) {
+
+	if os.Getenv("APP_ENV") != "production" {
+		err := godotenv.Load()
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	app := AppConfig{}
 
-	viper.SetConfigFile(".env")
-	viper.SetConfigType("env")
+	app.JWT_KEY = os.Getenv("JWT_KEY")
+	app.DBUser = os.Getenv("DBUSER")
+	app.DBPass = os.Getenv("DBPASS")
+	app.DBHost = os.Getenv("DBHOST")
+	app.DBName = os.Getenv("DBNAME")
+	app.Port = os.Getenv("HTTP_PORT")
+	app.URL = os.Getenv("HTTP_URL")
+	app.Env = os.Getenv("APP_ENV")
+	app.AllowedOrigins = os.Getenv("HTTP_ALLOWED_ORIGINS")
+	app.CLOUDINARY_CLOUD_NAME = os.Getenv("CLOUDINARY_CLOUD_NAME")
+	app.CLOUDINARY_API_KEY = os.Getenv("CLOUDINARY_API_KEY")
+	app.CLOUDINARY_API_SECRET = os.Getenv("CLOUDINARY_API_SECRET")
+	app.CLOUDINARY_UPLOAD_FOLDER = os.Getenv("CLOUDINARY_UPLOAD_FOLDER")
 
-	if err := viper.ReadInConfig(); err != nil {
-		log.Println("error reading config:", err)
+	if portStr := os.Getenv("DBPORT"); portStr != "" {
+		if port, err := strconv.Atoi(portStr); err == nil {
+			app.DBPort = port
+		} else {
+			log.Println("error converting DBPORT to int:", err)
+		}
 	}
 
-	app.JWT_KEY = viper.GetString("JWT_KEY")
-	app.DBUser = viper.GetString("DBUSER")
-	app.DBPass = viper.GetString("DBPASS")
-	app.DBHost = viper.GetString("DBHOST")
-	app.DBName = viper.GetString("DBNAME")
-	app.Port = viper.GetString("HTTP_PORT")
-	app.URL = viper.GetString("HTTP_URL")
-	app.Env = viper.GetString("APP_ENV")
-	app.AllowedOrigins = viper.GetString("HTTP_ALLOWED_ORIGINS")
-	app.CLOUDINARY_CLOUD_NAME = viper.GetString("CLOUDINARY_CLOUD_NAME")
-	app.CLOUDINARY_API_KEY = viper.GetString("CLOUDINARY_API_KEY")
-	app.CLOUDINARY_API_SECRET = viper.GetString("CLOUDINARY_API_SECRET")
-	app.CLOUDINARY_UPLOAD_FOLDER = viper.GetString("CLOUDINARY_UPLOAD_FOLDER")
-
-	if viper.IsSet("DBPORT") {
-		app.DBPort = viper.GetInt("DBPORT")
-	}
-
-	return &app
+	return &app, nil
+	
 }

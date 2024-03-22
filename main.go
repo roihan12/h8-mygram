@@ -28,28 +28,28 @@ import (
 	"github.com/roihan12/h8-mygram/app/router"
 )
 
-
-//	@title			MY GRAM API
-//	@version		1.0
-//	@description	This is a simple RESTful Social Media Service API written in Go using Gin web framework, PostgreSQL database
+// @title			MY GRAM API
+// @version		1.0
+// @description	This is a simple RESTful Social Media Service API written in Go using Gin web framework, PostgreSQL database
 //
-//	@contact.name	Roihan Sori
-//	@contact.url
-//	@contact.email	roihansori12@gmail.com
+// @contact.name	Roihan Sori
+// @contact.url
+// @contact.email	roihansori12@gmail.com
 //
-//	@license.name	MIT
-//	@license.url
+// @license.name	MIT
+// @license.url
 //
-//	@host
-//	@BasePath					/v1
-//	@schemes					http https
+// @host
+// @BasePath					/v1
+// @schemes					http https
 //
-//	@securityDefinitions.apikey	BearerAuth
-//	@in							header
-//	@name						Authorization
-//	@description				Type "Bearer" followed by a space and the access token.
+// @securityDefinitions.apikey	BearerAuth
+// @in							header
+// @name						Authorization
+// @description				Type "Bearer" followed by a space and the access token.
 func main() {
-	cfg := config.InitConfig()
+	cfg, _ := config.NewEnv()
+
 	db := database.InitDBPostgres(*cfg)
 	database.InitMigration(db)
 	cloudinary := utils.NewCloudinary(cfg)

@@ -43,6 +43,7 @@ func GetPublicID(secureURL string) string {
 }
 
 func (cu *claudinaryUploader) Upload(file *multipart.FileHeader) (string, error) {
+
 	src, _ := file.Open()
 	defer src.Close()
 
@@ -53,7 +54,6 @@ func (cu *claudinaryUploader) Upload(file *multipart.FileHeader) (string, error)
 		src,
 		uploader.UploadParams{
 			PublicID: publicID,
-			Folder:   config.CLOUDINARY_UPLOAD_FOLDER,
 		})
 	if err != nil {
 		return "", err
