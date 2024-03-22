@@ -14,7 +14,7 @@
   </a>
   <br/>
   <br/>
-  <a href="https://h8-mygram.fly.dev">Go to API »</a>
+  <a href="https://h8-mygram.fly.dev/v1/photos/">Go to API »</a>
 </div>
 
 # MYGRAM API
@@ -27,6 +27,9 @@ MyGram is an application where you can store photos and make comments on other p
 - Delete: Users can delete their uploaded photos, as well as remove their comments from any photo.
 
 This CRUD functionality will provide users with a seamless experience for managing their photos and interactions within the application.
+
+
+URL Deploy: https://h8-mygram.fly.dev/v1/
 
 # Features
 
