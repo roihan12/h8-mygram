@@ -1,21 +1,25 @@
 package service
 
 import (
+	"fmt"
 	"log"
 	"mime/multipart"
 
+	"github.com/roihan12/h8-mygram/features/comment"
 	"github.com/roihan12/h8-mygram/features/photo"
 	"github.com/roihan12/h8-mygram/utils"
 )
 
 type photoService struct {
 	query  photo.PhotoData
+	cquery comment.CommentService
 	upload utils.Uploader
 }
 
-func New(q photo.PhotoData, u utils.Uploader) photo.PhotoService {
+func New(q photo.PhotoData, u utils.Uploader, c comment.CommentService) photo.PhotoService {
 	return &photoService{
 		query:  q,
+		cquery: c,
 		upload: u,
 	}
 }
@@ -66,6 +70,28 @@ func (ps *photoService) GetById(photoID uint) (photo.PhotoEntity, error) {
 		return photo.PhotoEntity{}, utils.ErrInternal
 	}
 
+	comments, err := ps.cquery.GetByPhotoID(photoID)
+	if err != nil && err != utils.ErrDataNotFound {
+		return photo.PhotoEntity{}, utils.ErrInternal
+	}
+
+	// Konversi tipe data komentar
+	var photoComments []photo.Comment
+	for _, c := range comments {
+		photoComments = append(photoComments, photo.Comment{
+			ID:        c.ID,
+			PhotoID:   c.PhotoID,
+			UserID:    c.UserID,
+			Message:   c.Message,
+			CreatedAt: c.CreatedAt,
+			UpdatedAt: c.UpdatedAt,
+			User:      c.User,
+		})
+	}
+
+	// Memperbarui field Comments pada objek foto res dengan komentar yang diperoleh.
+	res.Comments = photoComments
+	fmt.Println(photoComments)
 	return res, nil
 }
 

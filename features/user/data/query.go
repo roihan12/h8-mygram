@@ -1,6 +1,7 @@
 package data
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/roihan12/h8-mygram/features/user"
@@ -103,6 +104,17 @@ func (uq *userQuery) Update(userID uint, updateData user.UserEntity) (user.UserE
 
 func (uq *userQuery) Delete(userID uint) error {
 	res := User{}
+
+	
+	deleteCommentsQuery := fmt.Sprintf("DELETE FROM comments WHERE user_id = %d", userID)
+	uq.db.Exec(deleteCommentsQuery)
+
+	deletePhotosQuery := fmt.Sprintf("DELETE FROM photos WHERE user_id = %d", userID)
+	uq.db.Exec(deletePhotosQuery)
+
+	deleteSocialMediaQuery := fmt.Sprintf("DELETE FROM social_media WHERE user_id = %d", userID)
+	uq.db.Exec(deleteSocialMediaQuery)
+
 	qry := uq.db.Delete(&res, userID)
 
 	if qry.RowsAffected <= 0 {

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 
 	"github.com/roihan12/h8-mygram/features/comment"
 	"github.com/roihan12/h8-mygram/utils"
@@ -95,7 +94,6 @@ func (cs *commentService) GetById(commentId uint) (comment.CommentEntity, error)
 		return comment.CommentEntity{}, utils.ErrInternal
 	}
 
-	fmt.Println("from service:", res.User)
-	fmt.Println(res.Photo)
+
 	return res, nil
 }

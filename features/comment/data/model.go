@@ -18,8 +18,8 @@ type Comment struct {
 	PhotoID   uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Photo     photoModel.Photo `gorm:"foreignkey:PhotoID;association_foreignkey:ID"`
-	User      userModel.User   `gorm:"foreignkey:UserID;association_foreignkey:ID"`
+	Photo     photoModel.Photo `gorm:"foreignkey:PhotoID;association_foreignkey:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	User      userModel.User   `gorm:"foreignkey:UserID;association_foreignkey:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 func CommentEntityToComment(data comment.CommentEntity) Comment {

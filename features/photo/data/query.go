@@ -7,6 +7,7 @@ import (
 	"github.com/roihan12/h8-mygram/features/photo"
 	"github.com/roihan12/h8-mygram/utils"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type query struct {
@@ -67,7 +68,7 @@ func (q *query) GetById(id uint) (photo.PhotoEntity, error) {
 
 func (q *query) Delete(id uint) error {
 	var photo Photo
-	if err := q.db.Delete(&photo, id).Error; err != nil {
+	if err := q.db.Select(clause.Associations).Delete(&photo, id).Error; err != nil {
 		log.Println("delete photo query error", err.Error())
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return utils.ErrDataNotFound

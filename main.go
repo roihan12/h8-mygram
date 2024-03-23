@@ -58,14 +58,13 @@ func main() {
 	userData := uData.New(db)
 	userService := uService.New(userData)
 	userHandler := uHandler.New(userService)
-
-	photoData := pData.New(db)
-	photoService := pService.New(photoData, cloudinary)
-	photoHandler := pHandler.New(photoService)
-
 	commentData := cData.New(db)
 	commentService := cService.New(commentData)
 	commentHandler := cHandler.New(commentService)
+
+	photoData := pData.New(db)
+	photoService := pService.New(photoData, cloudinary, commentService)
+	photoHandler := pHandler.New(photoService)
 
 	socialMediaData := sData.New(db)
 	socialMediaService := sService.New(socialMediaData)

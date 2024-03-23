@@ -16,8 +16,18 @@ type PhotoEntity struct {
 	User      user.UserEntity
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	Comments   []Comment
 }
 
+type Comment struct {
+	ID        uint
+	Message   string
+	UserID    uint
+	PhotoID   uint
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	User      user.UserEntity
+}
 type PhotoService interface {
 	GetAll() ([]PhotoEntity, error)
 	GetById(id uint) (PhotoEntity, error)

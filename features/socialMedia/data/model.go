@@ -16,7 +16,7 @@ type SocialMedia struct {
 	UserID         uint
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
-	User           userModel.User `gorm:"foreignkey:UserID;association_foreignkey:ID"`
+	User           userModel.User`gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 func SocialMediaEntityToSocialMedia(data socialMedia.SocialMediaEntity) SocialMedia {
@@ -40,7 +40,7 @@ func SocialMediaToSocialMediaEntity(data SocialMedia) socialMedia.SocialMediaEnt
 		UpdatedAt:      data.UpdatedAt,
 	}
 	result.User = user.UserEntity{
-		ID: data.User.ID,
+		ID:       data.User.ID,
 		Email:    data.User.Email,
 		Username: data.User.Username,
 	}

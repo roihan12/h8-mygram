@@ -17,7 +17,7 @@ type Photo struct {
 	UserID    uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	User      userModel.User `gorm:"foreignkey:UserID;association_foreignkey:ID"`
+	User      userModel.User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 func PhotoEntityToPhoto(data photo.PhotoEntity) Photo {

@@ -16,6 +16,16 @@ type PhotoResponse struct {
 	CreatedAt time.Time        `json:"created_at,omitempty"`
 	UpdatedAt time.Time        `json:"updated_at,omitempty"`
 	User      user.UserReponse `json:"user,omitempty"`
+	Comments  []CommentRes     `json:"comments,omitempty"`
+}
+type CommentRes struct {
+	ID        uint             `json:"id"`
+	Message   string           `json:"message"`
+	UserID    uint             `json:"user_id"`
+	PhotoID   uint             `json:"photo_id"`
+	CreatedAt time.Time        `json:"created_at"`
+	UpdatedAt time.Time        `json:"updated_at"`
+	User      user.UserReponse `json:"user,omitempty"`
 }
 
 func PhotoEntityToPhotoResponse(data photo.PhotoEntity) PhotoResponse {
@@ -32,6 +42,22 @@ func PhotoEntityToPhotoResponse(data photo.PhotoEntity) PhotoResponse {
 	photoResponse.User = user.UserReponse{
 		Username: data.User.Username,
 		Email:    data.User.Email,
+	}
+	for _, v := range data.Comments {
+		var comment = CommentRes{
+			ID:        v.ID,
+			Message:   v.Message,
+			UserID:    v.UserID,
+			PhotoID:   v.PhotoID,
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
+			User: user.UserReponse{
+				Username: v.User.Username,
+				Email:    v.User.Email,
+			},
+		}
+
+		photoResponse.Comments = append(photoResponse.Comments, comment)
 	}
 
 	return photoResponse
